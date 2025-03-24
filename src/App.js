@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import JobDescriptionPage from './pages/JobDescriptionPage';
 import ResumeGenerationPage from './pages/ResumeGenerationPage';
@@ -7,11 +7,11 @@ import ResumeGenerationPage from './pages/ResumeGenerationPage';
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route path="/job-description" component={JobDescriptionPage} />
-        <Route path="/resume-generation" component={ResumeGenerationPage} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/job-description" element={<JobDescriptionPage />} />
+        <Route path="/resume-generation" element={<ResumeGenerationPage />} />
+      </Routes>
     </Router>
   );
 }

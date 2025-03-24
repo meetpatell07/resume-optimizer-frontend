@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { submitJobDescription } from '../../services/apiService';
+import { submitJobDescription } from '../services/apiService';
 
 const JobDescriptionPage = () => {
   const [jobDescription, setJobDescription] = useState({
