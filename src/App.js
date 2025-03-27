@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
+import Home from './pages/HomePage';
+import Generator from "./pages/Generator";
+
 import JobDescriptionPage from './pages/JobDescriptionPage';
 import ResumeGenerationPage from './pages/ResumeGenerationPage';
 
@@ -8,9 +10,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/job-description" element={<JobDescriptionPage />} />
-        <Route path="/resume-generation" element={<ResumeGenerationPage />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/generate" element={<Generator />} />
       </Routes>
     </Router>
   );
