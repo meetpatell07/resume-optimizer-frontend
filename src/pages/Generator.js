@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";  // Import useNavigate from react-router-dom
 import axios from "axios";
 
 const Generator = () => {
+  const navigate = useNavigate();  // Initialize useNavigate hook to navigate between pages
   const [formData, setFormData] = useState({
     jobTitle: "",
     companyName: "",
@@ -41,6 +43,15 @@ const Generator = () => {
       <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
         Enter Job Details
       </h2>
+
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}  // Navigate back to the previous page
+        className="mb-4 px-4 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md hover:bg-gray-400"
+      >
+        Back
+      </button>
+
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-4">
         {Object.keys(formData).map((key) => (
           <div key={key}>

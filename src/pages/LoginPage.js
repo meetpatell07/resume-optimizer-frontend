@@ -23,7 +23,7 @@ const LoginPage = () => {
         console.log(response.data.token)
 
         // Redirect the user to the home page or dashboard
-        navigate('/generate');
+        navigate('/welcome');
       } else {
         setError('Invalid credentials. Please try again.');
       }
