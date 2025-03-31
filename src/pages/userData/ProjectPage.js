@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ProjectContext } from '../contexts/ProjectContext';
+import { ProjectContext } from '../../context/ProjectContext';
 
 const ProjectPage = () => {
   const { projectData, loading, error, addProject, updateProject, deleteProject } =

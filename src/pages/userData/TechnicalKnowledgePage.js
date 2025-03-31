@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { TechnicalKnowledgeContext } from '../contexts/TechnicalKnowledgeContext';
+import { TechnicalKnowledgeContext } from '../../context/TechnicalKnowledgeContext';
 
 const TechnicalKnowledgePage = () => {
   const { technicalKnowledge, loading, error, addTechnicalKnowledge, updateTechnicalKnowledge, deleteTechnicalKnowledge } = useContext(TechnicalKnowledgeContext);

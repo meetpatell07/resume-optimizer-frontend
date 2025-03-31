@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { VolunteerWorkContext } from '../contexts/VolunteerWorkContext';
+import { VolunteerWorkContext } from '../../context/VolunteerWorkContext';
 
 const VolunteerWorkPage = () => {
   const { volunteerWork, loading, error, addVolunteerWork, updateVolunteerWork, deleteVolunteerWork } = useContext(VolunteerWorkContext);

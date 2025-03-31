@@ -20,9 +20,9 @@ const WelcomePage = () => {
       </Link>
 
       {/* Option 2: Other Features */}
-      <Link to="/other-features">
+      <Link to="/generate-ai">
         <button className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700">
-          Other Features
+          Generate AI Resume
         </button>
       </Link>
     </div>

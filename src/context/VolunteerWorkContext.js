@@ -2,6 +2,9 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthProvider';
 
+import apiClient from '../api/apiClient'; // Import apiClient to make API requests
+
+
 export const VolunteerWorkContext = createContext();
 
 export const VolunteerWorkProvider = ({ children }) => {
@@ -20,7 +23,7 @@ export const VolunteerWorkProvider = ({ children }) => {
   const fetchVolunteerWorkData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/volunteerWork', {
+      const response = await apiClient.get('/volunteer', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -37,7 +40,7 @@ export const VolunteerWorkProvider = ({ children }) => {
   // Add volunteer work data
   const addVolunteerWork = async (work) => {
     try {
-      const response = await axios.post('/api/volunteerWork', work, {
+      const response = await apiClient.post('/volunteer', work, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -52,7 +55,7 @@ export const VolunteerWorkProvider = ({ children }) => {
   // Update volunteer work data
   const updateVolunteerWork = async (workId, updatedData) => {
     try {
-      const response = await axios.put(`/api/volunteerWork/${workId}`, updatedData, {
+      const response = await apiClient.put(`/volunteer/${workId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -69,7 +72,7 @@ export const VolunteerWorkProvider = ({ children }) => {
   // Delete volunteer work data
   const deleteVolunteerWork = async (workId) => {
     try {
-      await axios.delete(`/api/volunteerWork/${workId}`, {
+      await apiClient.delete(`/volunteer/${workId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

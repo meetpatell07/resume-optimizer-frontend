@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { EducationContext } from '../contexts/EducationContext';
+import { EducationContext } from '../../context/EducationContext';
 
 const EducationPage = () => {
   const { educationData, loading, error, addEducation, updateEducation, deleteEducation } =

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../api/apiClient'; // Import apiClient to make API requests
 import { AuthContext } from './AuthProvider';
 
 export const ProjectContext = createContext();
@@ -20,7 +20,7 @@ export const ProjectProvider = ({ children }) => {
   const fetchProjectData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/project', {
+      const response = await apiClient.get('/project', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -37,7 +37,7 @@ export const ProjectProvider = ({ children }) => {
   // Add a new project
   const addProject = async (project) => {
     try {
-      const response = await axios.post('/api/project', project, {
+      const response = await apiClient.post('/project', project, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -52,7 +52,7 @@ export const ProjectProvider = ({ children }) => {
   // Update project
   const updateProject = async (projectId, updatedData) => {
     try {
-      const response = await axios.put(`/api/project/${projectId}`, updatedData, {
+      const response = await apiClient.put(`/api/project/${projectId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -71,7 +71,7 @@ export const ProjectProvider = ({ children }) => {
   // Delete project
   const deleteProject = async (projectId) => {
     try {
-      await axios.delete(`/api/project/${projectId}`, {
+      await apiClient.delete(`/api/project/${projectId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

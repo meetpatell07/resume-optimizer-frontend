@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { WorkExperienceContext } from '../contexts/WorkExperienceContext';
+import { WorkExperienceContext } from '../../context/WorkExperienceContext';
 
 const WorkExperiencePage = () => {
   const { workExperience, loading, error, addWorkExperience, updateWorkExperience, deleteWorkExperience } = useContext(WorkExperienceContext);

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SkillContext } from '../contexts/SkillContext';
+import { SkillContext } from '../../context/SkillContext';
 
 const SkillPage = () => {
   const { skillsData, loading, error, addSkill, updateSkill, deleteSkill } = useContext(SkillContext);

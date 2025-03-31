@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthProvider';
 
+import apiClient from '../api/apiClient'; // Import apiClient to make API requests
+
 export const TechnicalKnowledgeContext = createContext();
 
 export const TechnicalKnowledgeProvider = ({ children }) => {
@@ -25,7 +27,7 @@ export const TechnicalKnowledgeProvider = ({ children }) => {
   const fetchTechnicalKnowledgeData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/technicalKnowledge', {
+      const response = await apiClient.get('/technical', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -42,7 +44,7 @@ export const TechnicalKnowledgeProvider = ({ children }) => {
   // Add technical knowledge data
   const addTechnicalKnowledge = async (knowledge) => {
     try {
-      const response = await axios.post('/api/technicalKnowledge', knowledge, {
+      const response = await apiClient.post('/technical', knowledge, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -57,7 +59,7 @@ export const TechnicalKnowledgeProvider = ({ children }) => {
   // Update technical knowledge data
   const updateTechnicalKnowledge = async (techId, updatedData) => {
     try {
-      const response = await axios.put(`/api/technicalKnowledge/${techId}`, updatedData, {
+      const response = await apiClient.put(`/technical/${techId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -72,7 +74,7 @@ export const TechnicalKnowledgeProvider = ({ children }) => {
   // Delete technical knowledge data
   const deleteTechnicalKnowledge = async (techId) => {
     try {
-      await axios.delete(`/api/technicalKnowledge/${techId}`, {
+      await apiClient.delete(`/technical/${techId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

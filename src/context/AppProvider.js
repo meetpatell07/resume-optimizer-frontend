@@ -1,26 +1,30 @@
 import React from 'react';
-import { EducationProvider } from '../contexts/EducationContext';
-import { AuthProvider } from '../contexts/AuthProvider';
-import { WorkExperienceProvider } from '../contexts/WorkExperienceContext';
-import { SkillsProvider } from '../contexts/SkillsContext';
-import { ProjectProvider } from '../contexts/ProjectContext';
-import { TechnicalKnowledgeProvider } from '../contexts/TechnicalKnowledgeContext';
-import { VolunteerWorkProvider } from '../contexts/VolunteerWorkContext';
+import { EducationProvider } from '../context/EducationContext';
+import { AuthProvider } from '../context/AuthProvider';
+import { WorkExperienceProvider } from '../context/WorkExperienceContext';
+import { SkillProvider } from '../context/SkillContext';
+import { ProjectProvider } from '../context/ProjectContext';
+import { TechnicalKnowledgeProvider } from '../context/TechnicalKnowledgeContext';
+import { VolunteerWorkProvider } from '../context/VolunteerWorkContext';
+import { UserProvider } from '../context/UserContext';
+
 
 const AppProvider = ({ children }) => {
   return (
     <AuthProvider>
       <EducationProvider>
         <WorkExperienceProvider>
-          <SkillsProvider>
+          <SkillProvider>
             <ProjectProvider>
               <TechnicalKnowledgeProvider>
                 <VolunteerWorkProvider>
-                  {children}
+                  <UserProvider>
+                    {children}
+                  </UserProvider>
                 </VolunteerWorkProvider>
               </TechnicalKnowledgeProvider>
             </ProjectProvider>
-          </SkillsProvider>
+          </SkillProvider>
         </WorkExperienceProvider>
       </EducationProvider>
     </AuthProvider>

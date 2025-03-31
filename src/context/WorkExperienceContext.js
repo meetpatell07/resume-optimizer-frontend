@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthProvider';
 
+import apiClient from '../api/apiClient'; // Import apiClient to make API requests
+
 export const WorkExperienceContext = createContext();
 
 export const WorkExperienceProvider = ({ children }) => {
@@ -20,7 +22,7 @@ export const WorkExperienceProvider = ({ children }) => {
   const fetchWorkExperienceData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/workExperience', {
+      const response = await apiClient.get('/work', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -37,7 +39,7 @@ export const WorkExperienceProvider = ({ children }) => {
   // Add work experience data
   const addWorkExperience = async (work) => {
     try {
-      const response = await axios.post('/api/workExperience', work, {
+      const response = await apiClient.post('/work', work, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -52,7 +54,7 @@ export const WorkExperienceProvider = ({ children }) => {
   // Update work experience data
   const updateWorkExperience = async (workId, updatedData) => {
     try {
-      const response = await axios.put(`/api/workExperience/${workId}/work-experience`, updatedData, {
+      const response = await apiClient.put(`/work/${workId}/work-experience`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -69,7 +71,7 @@ export const WorkExperienceProvider = ({ children }) => {
   // Delete work experience data
   const deleteWorkExperience = async (workId) => {
     try {
-      await axios.delete(`/api/workExperience/${workId}/work-experience`, {
+      await apiClient.delete(`/work/${workId}/work-experience`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthProvider';
+import apiClient from '../api/apiClient'; // Import apiClient to make API requests
+
 
 export const EducationContext = createContext();
 
@@ -20,15 +22,20 @@ export const EducationProvider = ({ children }) => {
   const fetchEducationData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/education', {
+      console.log('Sending request with token:', user.token);  // Log token being sent
+
+      const response = await apiClient.get('/education', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
+
+    //   console.log('Education Data:', response.data);  // Log the response data
+
       setEducationData(response.data);
     } catch (err) {
       setError('Failed to fetch education data.');
-      console.error(err);
+      console.log('Error fetching education data:', err.response ? err.response.data : err.message); // Log detailed error message
     } finally {
       setLoading(false);
     }
@@ -37,7 +44,7 @@ export const EducationProvider = ({ children }) => {
   // Add education
   const addEducation = async (education) => {
     try {
-      const response = await axios.post('/api/education', education, {
+      const response = await apiClient.post('/education', education, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -52,7 +59,7 @@ export const EducationProvider = ({ children }) => {
   // Update education
   const updateEducation = async (educationId, updatedData) => {
     try {
-      const response = await axios.put(`/api/education/${educationId}`, updatedData, {
+      const response = await apiClient.put(`/education/${educationId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -71,7 +78,7 @@ export const EducationProvider = ({ children }) => {
   // Delete education
   const deleteEducation = async (educationId) => {
     try {
-      await axios.delete(`/api/education/${educationId}`, {
+      await apiClient.delete(`/education/${educationId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

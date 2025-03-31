@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthProvider';
+import apiClient from '../api/apiClient'; // Import apiClient to make API requests
+
 
 export const SkillContext = createContext();
 
@@ -20,11 +22,12 @@ export const SkillProvider = ({ children }) => {
   const fetchSkillsData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/skills', {
+      const response = await apiClient.get('/skill', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
+      // console.log(response.data)
       setSkillsData(response.data);
     } catch (err) {
       setError('Failed to fetch skills data.');
@@ -37,7 +40,7 @@ export const SkillProvider = ({ children }) => {
   // Add skill data
   const addSkill = async (skill) => {
     try {
-      const response = await axios.post('/api/skills', skill, {
+      const response = await apiClient.post('/skill', skill, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -55,7 +58,7 @@ export const SkillProvider = ({ children }) => {
   // Update skill data
   const updateSkill = async (skillId, updatedData) => {
     try {
-      const response = await axios.put(`/api/skills/${skillId}`, updatedData, {
+      const response = await apiClient.put(`/api/skill/${skillId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -73,7 +76,7 @@ export const SkillProvider = ({ children }) => {
   // Delete skill data
   const deleteSkill = async (skillId) => {
     try {
-      await axios.delete(`/api/skills/${skillId}`, {
+      await apiClient.delete(`/api/skill/${skillId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
