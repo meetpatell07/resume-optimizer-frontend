@@ -1,9 +1,10 @@
+// context/AuthProvider.js
 import React, { createContext, useState, useEffect } from 'react';
 import { setAuthToken } from '../api/apiClient';
 
 export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => { // Named export
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -32,5 +33,3 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export default AuthProvider;
