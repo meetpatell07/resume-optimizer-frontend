@@ -20,8 +20,6 @@ const LoginPage = () => {
       if (response.data.token) {
         // If login is successful, call the login function from AuthContext
         login(response.data.token);
-        console.log(response.data.token)
-
         // Redirect the user to the home page or dashboard
         navigate('/welcome');
       } else {

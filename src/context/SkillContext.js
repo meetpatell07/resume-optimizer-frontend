@@ -1,100 +1,92 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import { AuthContext } from './AuthProvider';
 import apiClient from '../api/apiClient'; // Import apiClient to make API requests
 
+// Create SkillContext
+const SkillContext = createContext();
 
-export const SkillContext = createContext();
-
+// SkillContext Provider Component
 export const SkillProvider = ({ children }) => {
-  const { user } = useContext(AuthContext);  // Get user context for authentication
-  const [skillsData, setSkillsData] = useState({ technicalSkills: [], softSkills: [] });
+  const { user } = useContext(AuthContext); // Get the user from AuthContext
+  const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch skills by user ID
   useEffect(() => {
     if (user) {
-      fetchSkillsData();
+      fetchSkills(user.id);
     }
   }, [user]);
 
-  // Fetch skill data for the current user
-  const fetchSkillsData = async () => {
+  // Function to fetch skills from the server
+  const fetchSkills = async (userId) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await apiClient.get('/skill', {
+      const response = await apiClient.get(`/skill`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      // console.log(response.data)
-      setSkillsData(response.data);
+      setSkills(response.data);
+      setError(null);
     } catch (err) {
-      setError('Failed to fetch skills data.');
-      console.error(err);
+      setError('Error fetching skills');
     } finally {
       setLoading(false);
     }
   };
 
-  // Add skill data
-  const addSkill = async (skill) => {
+  // Function to add a new skill
+  const addSkill = async (skillData) => {
     try {
-      const response = await apiClient.post('/skill', skill, {
+      const response = await apiClient.post('/skill', skillData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      setSkillsData({
-        technicalSkills: response.data.technicalSkills,
-        softSkills: response.data.softSkills,
-      });
+      setSkills((prevSkills) => [...prevSkills, response.data]);
     } catch (err) {
-      setError('Failed to add skill.');
-      console.error(err);
+      setError('Error adding skill');
     }
   };
 
-  // Update skill data
+  // Function to update an existing skill
   const updateSkill = async (skillId, updatedData) => {
     try {
-      const response = await apiClient.put(`/api/skill/${skillId}`, updatedData, {
+      const response = await apiClient.put(`/skill/${skillId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      setSkillsData({
-        technicalSkills: response.data.technicalSkills,
-        softSkills: response.data.softSkills,
-      });
+      setSkills((prevSkills) =>
+        prevSkills.map((skill) =>
+          skill._id === skillId ? response.data : skill
+        )
+      );
     } catch (err) {
-      setError('Failed to update skill.');
-      console.error(err);
+      setError('Error updating skill');
     }
   };
 
-  // Delete skill data
+  // Function to delete a skill
   const deleteSkill = async (skillId) => {
     try {
-      await apiClient.delete(`/api/skill/${skillId}`, {
+      await apiClient.delete(`/skill/${skillId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      setSkillsData({
-        technicalSkills: skillsData.technicalSkills.filter((skill) => skill._id !== skillId),
-        softSkills: skillsData.softSkills.filter((skill) => skill._id !== skillId),
-      });
+      setSkills((prevSkills) => prevSkills.filter((skill) => skill._id !== skillId));
     } catch (err) {
-      setError('Failed to delete skill.');
-      console.error(err);
+      setError('Error deleting skill');
     }
   };
 
   return (
     <SkillContext.Provider
       value={{
-        skillsData,
+        skills,
         loading,
         error,
         addSkill,
@@ -105,4 +97,9 @@ export const SkillProvider = ({ children }) => {
       {children}
     </SkillContext.Provider>
   );
+};
+
+// Custom hook to use SkillContext
+export const useSkills = () => {
+  return useContext(SkillContext);
 };

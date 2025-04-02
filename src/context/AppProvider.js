@@ -7,6 +7,7 @@ import { ProjectProvider } from '../context/ProjectContext';
 import { TechnicalKnowledgeProvider } from '../context/TechnicalKnowledgeContext';
 import { VolunteerWorkProvider } from '../context/VolunteerWorkContext';
 import { UserProvider } from '../context/UserContext';
+import { ProfileProvider } from './ProfileContext';
 
 
 const AppProvider = ({ children }) => {
@@ -18,9 +19,13 @@ const AppProvider = ({ children }) => {
             <ProjectProvider>
               <TechnicalKnowledgeProvider>
                 <VolunteerWorkProvider>
+                <ProfileProvider>
+
                   <UserProvider>
                     {children}
                   </UserProvider>
+                  
+                  </ProfileProvider>
                 </VolunteerWorkProvider>
               </TechnicalKnowledgeProvider>
             </ProjectProvider>

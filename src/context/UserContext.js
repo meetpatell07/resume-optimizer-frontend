@@ -26,7 +26,6 @@ export const UserProvider = ({ children }) => {
       });
 
       // Handle successful response
-      console.log('Fetched user data:', response.data.user);
       setUser(response.data.user);  // Set the user data
     } catch (err) {
       // Improved error handling

@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';  // For navigation
+import { FaLinkedin, FaGithub, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from 'react-icons/fa';  // Icons for social links
 
 const ProfilePage = () => {
   const { user, loading, error } = useUser();
   const navigate = useNavigate(); // Initialize useNavigate hook for navigation
 
-  // Log the user data when the component mounts or user state changes
   useEffect(() => {
     console.log('User data loaded:', user);
   }, [user]);
 
   // If the profile is being fetched or there's an error, show appropriate messages
   if (loading) {
-    console.log('Loading...');
-    return <p>Loading...</p>;
+    return <div className="text-center text-2xl mt-10">Loading...</div>;
   }
 
   if (error) {
-    console.log('Error encountered:', error);
-    return <p>{error}</p>;
+    return <div className="text-center text-2xl mt-10 text-red-500">{error}</div>;
   }
 
   const handleEditClick = () => {
@@ -27,95 +25,101 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-semibold mb-6">User Profile</h2>
-      {user && (
-        <div className="space-y-4">
-          {/* Profile Picture (Optional) */}
-          {user.profilePicture && (
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-blue-700 flex justify-center items-center py-6">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-11/12 md:w-2/3 lg:w-1/2 space-y-6 transform transition-all duration-300 hover:scale-105">
+        <h2 className="text-3xl font-semibold text-center text-gray-800">User Profile</h2>
+        {user && (
+          <div className="space-y-4">
+            {/* Profile Picture (Optional) */}
+            {user.profilePicture && (
+              <div className="flex justify-center mb-4">
+                <img
+                  src={user.profilePicture}
+                  alt="Profile"
+                  className="w-32 h-32 rounded-full object-cover shadow-xl border-4 border-blue-400"
+                />
+              </div>
+            )}
+
+            {/* Display Full Name */}
+            <div className="space-y-2">
+              <label className="block text-lg font-medium text-gray-600">Full Name</label>
+              <p className="text-xl text-gray-800">{user.fullName}</p>
+            </div>
+
+            {/* Display Contact Information */}
+            <div className="space-y-2">
+              <label className="block text-lg font-medium text-gray-600">Phone</label>
+              <p className="text-xl text-gray-800 flex items-center">
+                <FaPhoneAlt className="mr-2 text-blue-500" />
+                {user.contactInfo?.phone}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-lg font-medium text-gray-600">Email</label>
+              <p className="text-xl text-gray-800 flex items-center">
+                <FaEnvelope className="mr-2 text-blue-500" />
+                {user.contactInfo?.email}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-lg font-medium text-gray-600">Address</label>
+              <p className="text-xl text-gray-800">{user.contactInfo?.address}</p>
+            </div>
+
+            {/* Social Links (LinkedIn, GitHub, Portfolio) */}
+            <div className="space-y-2">
+              {user.linkedIn && (
+                <div className="flex items-center">
+                  <FaLinkedin className="mr-2 text-blue-600 text-xl" />
+                  <a href={user.linkedIn} target="_blank" rel="noopener noreferrer" className="text-xl text-blue-700 hover:underline">
+                    LinkedIn
+                  </a>
+                </div>
+              )}
+
+              {user.github && (
+                <div className="flex items-center">
+                  <FaGithub className="mr-2 text-gray-700 text-xl" />
+                  <a href={user.github} target="_blank" rel="noopener noreferrer" className="text-xl text-gray-800 hover:underline">
+                    GitHub
+                  </a>
+                </div>
+              )}
+
+              {user.portfolio && (
+                <div className="flex items-center">
+                  <FaLinkedin className="mr-2 text-gray-600 text-xl" />
+                  <a href={user.portfolio} target="_blank" rel="noopener noreferrer" className="text-xl text-gray-800 hover:underline">
+                    Portfolio
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Location */}
+            <div className="space-y-2">
+              <label className="block text-lg font-medium text-gray-600">Location</label>
+              <p className="text-xl text-gray-800 flex items-center">
+                <FaMapMarkerAlt className="mr-2 text-green-500" />
+                {user.location || 'Not specified'}
+              </p>
+            </div>
+
+            {/* Edit Button */}
             <div className="flex justify-center">
-              <img
-                src={user.profilePicture}
-                alt="Profile"
-                className="w-24 h-24 rounded-full object-cover"
-              />
+              <button
+                onClick={handleEditClick}
+                className="w-1/2 bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition duration-300 shadow-lg hover:scale-105"
+              >
+                Edit Profile
+              </button>
             </div>
-          )}
-
-          {/* Display Full Name */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Full Name</label>
-            <p className="text-xl">{user.fullName}</p>
           </div>
-
-          {/* Display Contact Information */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Phone</label>
-            <p className="text-xl">{user.contactInfo?.phone}</p>
-          </div>
-
-          <div>
-            <label className="block text-lg font-medium mb-2">Email</label>
-            <p className="text-xl">{user.contactInfo?.email}</p>
-          </div>
-
-          <div>
-            <label className="block text-lg font-medium mb-2">Address</label>
-            <p className="text-xl">{user.contactInfo?.address}</p>
-          </div>
-
-          {/* Display LinkedIn, GitHub, and Portfolio */}
-          {user.linkedIn && (
-            <div>
-              <label className="block text-lg font-medium mb-2">LinkedIn</label>
-              <p className="text-xl">
-                <a href={user.linkedIn} target="_blank" rel="noopener noreferrer">
-                  {user.linkedIn}
-                </a>
-              </p>
-            </div>
-          )}
-
-          {user.github && (
-            <div>
-              <label className="block text-lg font-medium mb-2">GitHub</label>
-              <p className="text-xl">
-                <a href={user.github} target="_blank" rel="noopener noreferrer">
-                  {user.github}
-                </a>
-              </p>
-            </div>
-          )}
-
-          {user.portfolio && (
-            <div>
-              <label className="block text-lg font-medium mb-2">Portfolio</label>
-              <p className="text-xl">
-                <a href={user.portfolio} target="_blank" rel="noopener noreferrer">
-                  {user.portfolio}
-                </a>
-              </p>
-            </div>
-          )}
-
-          {/* Display Location */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Location</label>
-            <p className="text-xl">{user.location || 'Not specified'}</p>
-          </div>
-
-          {/* Error message */}
-          {error && <p className="text-red-500">{error}</p>}
-
-          {/* Button to navigate to the edit profile page */}
-          <button
-            onClick={handleEditClick}
-            className="w-full mt-4 bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
-          >
-            Edit Profile
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

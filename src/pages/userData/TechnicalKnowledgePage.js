@@ -1,138 +1,230 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { TechnicalKnowledgeContext } from '../../context/TechnicalKnowledgeContext';
 
 const TechnicalKnowledgePage = () => {
-  const { technicalKnowledge, loading, error, addTechnicalKnowledge, updateTechnicalKnowledge, deleteTechnicalKnowledge } = useContext(TechnicalKnowledgeContext);
-  const [newKnowledge, setNewKnowledge] = useState({
+  const { technicalKnowledge = [], loading, error, addTechnicalKnowledge, updateTechnicalKnowledge, deleteTechnicalKnowledge } = useContext(TechnicalKnowledgeContext);
+
+  // Local state to manage form inputs
+  const [newTechKnowledge, setNewTechKnowledge] = useState({
     programmingLanguages: '',
     toolsAndFrameworks: '',
     certifications: '',
     otherDetails: '',
   });
 
-  const handleChange = (e) => {
-    setNewKnowledge({ ...newKnowledge, [e.target.name]: e.target.value });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTechId, setEditTechId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTechKnowledge((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleAddKnowledge = (e) => {
+  // Handle adding new technical knowledge
+  const handleAddKnowledge = async (e) => {
     e.preventDefault();
-    const knowledgeData = {
-      programmingLanguages: newKnowledge.programmingLanguages.split(','),
-      toolsAndFrameworks: newKnowledge.toolsAndFrameworks.split(','),
-      certifications: newKnowledge.certifications.split(','),
-      otherDetails: newKnowledge.otherDetails,
-    };
-    addTechnicalKnowledge(knowledgeData);
-    setNewKnowledge({
-      programmingLanguages: '',
-      toolsAndFrameworks: '',
-      certifications: '',
-      otherDetails: '',
-    });
+    try {
+      await addTechnicalKnowledge(newTechKnowledge);
+      setSuccessMessage('Technical knowledge added successfully!');
+      setErrorMessage('');
+      setNewTechKnowledge({
+        programmingLanguages: '',
+        toolsAndFrameworks: '',
+        certifications: '',
+        otherDetails: '',
+      });
+    } catch (error) {
+      setErrorMessage('Failed to add technical knowledge.');
+      setSuccessMessage('');
+    }
   };
+
+  // Handle updating existing technical knowledge
+  const handleUpdateKnowledge = async (e) => {
+    e.preventDefault();
+    if (editTechId) {
+      try {
+        await updateTechnicalKnowledge(editTechId, newTechKnowledge);
+        setSuccessMessage('Technical knowledge updated successfully!');
+        setErrorMessage('');
+        setIsEditing(false);
+        setEditTechId(null);
+        setNewTechKnowledge({
+          programmingLanguages: '',
+          toolsAndFrameworks: '',
+          certifications: '',
+          otherDetails: '',
+        });
+      } catch (error) {
+        setErrorMessage('Failed to update technical knowledge.');
+        setSuccessMessage('');
+      }
+    }
+  };
+
+  // Handle editing a specific technical knowledge item
+  const handleEditKnowledge = (techId) => {
+    const techToEdit = technicalKnowledge.find((item) => item._id === techId);
+    if (techToEdit) {
+      setNewTechKnowledge({
+        programmingLanguages: techToEdit.programmingLanguages.join(', '),
+        toolsAndFrameworks: techToEdit.toolsAndFrameworks.join(', '),
+        certifications: techToEdit.certifications.join(', '),
+        otherDetails: techToEdit.otherDetails,
+      });
+      setIsEditing(true);
+      setEditTechId(techId);
+    }
+  };
+
+  // Handle deleting a specific technical knowledge
+  const handleDeleteKnowledge = async (techId) => {
+    try {
+      await deleteTechnicalKnowledge(techId);
+      setSuccessMessage('Technical knowledge deleted successfully!');
+      setErrorMessage('');
+    } catch (error) {
+      setErrorMessage('Failed to delete technical knowledge.');
+      setSuccessMessage('');
+    }
+  };
+
+  // Render the list of technical knowledge
+  const renderTechKnowledge = () => {
+    // Ensure technicalKnowledge is an array
+    if (!Array.isArray(technicalKnowledge)) {
+      return <p className="text-center mt-8 text-red-500">Invalid data format</p>;
+    }
+
+    if (technicalKnowledge.length === 0) {
+      return <p className="text-center mt-8">No technical knowledge available.</p>;
+    }
+
+    return (
+      <div className="mt-6">
+        <h2 className="text-2xl font-semibold">Your Technical Knowledge</h2>
+        <div className="mt-4">
+          {technicalKnowledge.map((item) => (
+            <div key={item._id} className="p-4 bg-white shadow-md rounded-lg mb-4">
+              <h3 className="font-semibold text-xl">Programming Languages:</h3>
+              <p>{item.programmingLanguages?.join(', ')}</p>
+
+              <h3 className="font-semibold text-xl mt-3">Tools & Frameworks:</h3>
+              <p>{item.toolsAndFrameworks?.join(', ')}</p>
+
+              <h3 className="font-semibold text-xl mt-3">Certifications:</h3>
+              <p>{item.certifications?.join(', ')}</p>
+
+              <h3 className="font-semibold text-xl mt-3">Other Details:</h3>
+              <p>{item.otherDetails}</p>
+
+              <div className="mt-4">
+                <button
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                  onClick={() => handleEditKnowledge(item._id)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 ml-4 rounded hover:bg-red-600"
+                  onClick={() => handleDeleteKnowledge(item._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  if (loading) return <p className="text-center mt-8">Loading...</p>;
+  if (error) return <p className="text-center mt-8 text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-3xl mx-auto py-10">
-      <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">Your Technical Knowledge</h2>
+    <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
+      <h1 className="text-3xl font-bold text-center">Technical Knowledge</h1>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {successMessage && (
+        <div className="bg-green-500 text-white p-3 rounded mt-4 text-center">
+          {successMessage}
+        </div>
+      )}
 
-      <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-        <form onSubmit={handleAddKnowledge}>
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Add Technical Knowledge</h3>
+      {errorMessage && (
+        <div className="bg-red-500 text-white p-3 rounded mt-4 text-center">
+          {errorMessage}
+        </div>
+      )}
+
+      <form
+        onSubmit={isEditing ? handleUpdateKnowledge : handleAddKnowledge}
+        className="mt-6 space-y-4"
+      >
+        <div>
+          <label className="block text-lg font-semibold">Programming Languages</label>
           <input
             type="text"
             name="programmingLanguages"
-            value={newKnowledge.programmingLanguages}
-            onChange={handleChange}
+            value={newTechKnowledge.programmingLanguages}
+            onChange={handleInputChange}
+            className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="Enter programming languages (comma separated)"
-            className="w-full p-2 border rounded-md mb-4"
           />
+        </div>
+
+        <div>
+          <label className="block text-lg font-semibold">Tools & Frameworks</label>
           <input
             type="text"
             name="toolsAndFrameworks"
-            value={newKnowledge.toolsAndFrameworks}
-            onChange={handleChange}
-            placeholder="Enter tools and frameworks (comma separated)"
-            className="w-full p-2 border rounded-md mb-4"
+            value={newTechKnowledge.toolsAndFrameworks}
+            onChange={handleInputChange}
+            className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter tools & frameworks (comma separated)"
           />
+        </div>
+
+        <div>
+          <label className="block text-lg font-semibold">Certifications</label>
           <input
             type="text"
             name="certifications"
-            value={newKnowledge.certifications}
-            onChange={handleChange}
+            value={newTechKnowledge.certifications}
+            onChange={handleInputChange}
+            className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="Enter certifications (comma separated)"
-            className="w-full p-2 border rounded-md mb-4"
           />
+        </div>
+
+        <div>
+          <label className="block text-lg font-semibold">Other Details</label>
           <textarea
             name="otherDetails"
-            value={newKnowledge.otherDetails}
-            onChange={handleChange}
-            placeholder="Other technical details"
-            className="w-full p-2 border rounded-md mb-4"
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700"
-          >
-            Add Knowledge
-          </button>
-        </form>
-      </div>
+            value={newTechKnowledge.otherDetails}
+            onChange={handleInputChange}
+            className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            rows="4"
+            placeholder="Enter other details about your experience"
+          ></textarea>
+        </div>
 
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Programming Languages</h3>
-        <ul className="space-y-4">
-          {technicalKnowledge.programmingLanguages?.map((tech, index) => (
-            <li key={index} className="p-4 border-b">
-              <div className="flex justify-between items-center">
-                <span>{tech}</span>
-                <button
-                  onClick={() => deleteTechnicalKnowledge(tech._id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md"
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <button
+          type="submit"
+          className="w-full py-3 mt-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
+        >
+          {isEditing ? 'Update Knowledge' : 'Add Knowledge'}
+        </button>
+      </form>
 
-        <h3 className="text-lg font-semibold text-gray-800 mt-8 mb-4">Tools & Frameworks</h3>
-        <ul className="space-y-4">
-          {technicalKnowledge.toolsAndFrameworks?.map((tech, index) => (
-            <li key={index} className="p-4 border-b">
-              <div className="flex justify-between items-center">
-                <span>{tech}</span>
-                <button
-                  onClick={() => deleteTechnicalKnowledge(tech._id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md"
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        <h3 className="text-lg font-semibold text-gray-800 mt-8 mb-4">Certifications</h3>
-        <ul className="space-y-4">
-          {technicalKnowledge.certifications?.map((tech, index) => (
-            <li key={index} className="p-4 border-b">
-              <div className="flex justify-between items-center">
-                <span>{tech}</span>
-                <button
-                  onClick={() => deleteTechnicalKnowledge(tech._id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md"
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {renderTechKnowledge()}
     </div>
   );
 };

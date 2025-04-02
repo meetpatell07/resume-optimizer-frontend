@@ -52,7 +52,7 @@ export const ProjectProvider = ({ children }) => {
   // Update project
   const updateProject = async (projectId, updatedData) => {
     try {
-      const response = await apiClient.put(`/api/project/${projectId}`, updatedData, {
+      const response = await apiClient.put(`/project/${projectId}`, updatedData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -71,7 +71,7 @@ export const ProjectProvider = ({ children }) => {
   // Delete project
   const deleteProject = async (projectId) => {
     try {
-      await apiClient.delete(`/api/project/${projectId}`, {
+      await apiClient.delete(`/project/${projectId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

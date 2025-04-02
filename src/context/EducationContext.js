@@ -22,15 +22,12 @@ export const EducationProvider = ({ children }) => {
   const fetchEducationData = async () => {
     try {
       setLoading(true);
-      console.log('Sending request with token:', user.token);  // Log token being sent
 
       const response = await apiClient.get('/education', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-
-    //   console.log('Education Data:', response.data);  // Log the response data
 
       setEducationData(response.data);
     } catch (err) {
