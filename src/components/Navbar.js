@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <div className="bg-gray-900 text-white shadow-md py-4 px-6 flex justify-between items-center">
       <div className="text-2xl font-semibold text-yellow-400 hover:text-yellow-300">
-        <Link to="/welcome">AI Resume Generator</Link>
+        <Link to="/">AI Resume Generator</Link>
       </div>
 
       {user ? (

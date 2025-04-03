@@ -21,7 +21,7 @@ const LoginPage = () => {
         // If login is successful, call the login function from AuthContext
         login(response.data.token);
         // Redirect the user to the home page or dashboard
-        navigate('/welcome');
+        navigate('/');
       } else {
         setError('Invalid credentials. Please try again.');
       }

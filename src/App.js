@@ -29,9 +29,9 @@ function App() {
       <Router>
         <Navbar /> 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/login" element={<LoginPage />} /> 
-          <Route path="/welcome" element={<WelcomePage />} /> 
+          <Route path="/" element={<WelcomePage />} /> 
           <Route path="/profile" element={<ProfilePage />} /> 
           <Route path="/profile/edit" element={<ProfileEditPage />} />
           <Route path="/generate" element={<Generator />} />
